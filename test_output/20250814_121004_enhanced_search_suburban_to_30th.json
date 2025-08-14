@@ -1,0 +1,26 @@
+[
+  {
+    "orig_train": "433",
+    "orig_line": "Airport",
+    "orig_departure_time": "12:25PM",
+    "orig_arrival_time": "12:29PM",
+    "orig_delay": "On time",
+    "isdirect": "true"
+  },
+  {
+    "orig_train": "6317",
+    "orig_line": "Media/Wawa",
+    "orig_departure_time": "12:28PM",
+    "orig_arrival_time": "12:32PM",
+    "orig_delay": "On time",
+    "isdirect": "true"
+  },
+  {
+    "orig_train": "5215",
+    "orig_line": "Wilmington/Newark",
+    "orig_departure_time": "12:35PM",
+    "orig_arrival_time": "12:39PM",
+    "orig_delay": "2 mins",
+    "isdirect": "true"
+  }
+]

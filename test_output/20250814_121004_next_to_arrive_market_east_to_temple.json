@@ -1,0 +1,18 @@
+[
+  {
+    "orig_train": "6512",
+    "orig_line": "Lansdale/Doylestown",
+    "orig_departure_time": "12:14PM",
+    "orig_arrival_time": "12:18PM",
+    "orig_delay": "On time",
+    "isdirect": "true"
+  },
+  {
+    "orig_train": "6320",
+    "orig_line": "West Trenton",
+    "orig_departure_time": "12:33PM",
+    "orig_arrival_time": "12:37PM",
+    "orig_delay": "On time",
+    "isdirect": "true"
+  }
+]

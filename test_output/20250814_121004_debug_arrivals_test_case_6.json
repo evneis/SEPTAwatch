@@ -1,0 +1,12 @@
+{
+  "test_case": 6,
+  "parameters": {
+    "req1": "Suburban Station",
+    "req2": "30th Street Station",
+    "req3": 10
+  },
+  "status_code": 200,
+  "response_type": "<class 'list'>",
+  "response_length": 0,
+  "raw_data": []
+}
