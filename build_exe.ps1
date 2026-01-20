@@ -8,7 +8,7 @@ pip install pyinstaller
 pyinstaller --name=SEPTAwatch `
     --onefile `
     --windowed `
-    --icon=NONE `
+    --icon="$PSScriptRoot\philadelphia-septa-metro-logo.ico" `
     --add-data "requirements.txt;." `
     main.py
 
