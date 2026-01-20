@@ -11,6 +11,12 @@ pyinstaller --name=SEPTAwatch ^
     --windowed ^
     --icon="C:\Projects\SEPTAwatch\philadelphia-septa-metro-logo.ico" ^
     --add-data "requirements.txt;." ^
+    --hidden-import PyQt6 ^
+    --hidden-import PyQt6.QtCore ^
+    --hidden-import PyQt6.QtGui ^
+    --hidden-import PyQt6.QtWidgets ^
+    --collect-submodules PyQt6 ^
+    --collect-all PyQt6 ^
     main.py
 
 echo.
