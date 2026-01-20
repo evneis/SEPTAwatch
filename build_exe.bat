@@ -1,0 +1,19 @@
+@echo off
+REM Build script for creating Windows executable
+echo Building SEPTAwatch executable...
+
+REM Install PyInstaller if not already installed
+pip install pyinstaller
+
+REM Build the executable
+pyinstaller --name=SEPTAwatch ^
+    --onefile ^
+    --windowed ^
+    --icon="C:\Projects\SEPTAwatch\philadelphia-septa-metro-logo.ico" ^
+    --add-data "requirements.txt;." ^
+    main.py
+
+echo.
+echo Build complete! Executable is in the 'dist' folder.
+echo You can find it at: dist\SEPTAwatch.exe
+pause
