@@ -1,24 +1,12 @@
 #!/bin/bash
 # Build script for creating Linux executable
+set -euo pipefail
+cd "$(dirname "$0")"
 
 echo "Building SEPTAwatch executable for Linux..."
 
-# Install PyInstaller if not already installed
 pip install pyinstaller
-
-# Build the executable
-pyinstaller --name=SEPTAwatch \
-    --onefile \
-    --noconsole \
-    --icon="philadelphia-septa-metro-logo.png" \
-    --add-data "requirements.txt:." \
-    --hidden-import PyQt6 \
-    --hidden-import PyQt6.QtCore \
-    --hidden-import PyQt6.QtGui \
-    --hidden-import PyQt6.QtWidgets \
-    --collect-submodules PyQt6 \
-    --collect-all PyQt6 \
-    main.py
+pyinstaller --noconfirm --clean SEPTAwatch.spec
 
 echo ""
 echo "Build complete! Executable is in the 'dist' folder."

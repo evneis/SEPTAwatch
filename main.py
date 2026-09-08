@@ -2,11 +2,12 @@
 
 from __future__ import annotations
 
+import os
 import sys
 from typing import Any, Callable
 
 from PyQt6.QtCore import Qt, QThread, QTimer, pyqtSignal
-from PyQt6.QtGui import QFont
+from PyQt6.QtGui import QAction, QFont, QIcon
 from PyQt6.QtWidgets import (
     QApplication,
     QCheckBox,
@@ -16,6 +17,7 @@ from PyQt6.QtWidgets import (
     QLabel,
     QLineEdit,
     QMainWindow,
+    QMessageBox,
     QPushButton,
     QSpinBox,
     QSplitter,
@@ -32,6 +34,28 @@ from stations import api_name_from_choice, station_choices
 
 METRO_ROUTES = ("L1", "B1", "M1", "T1", "T2", "T3", "T4", "T5", "G1", "D1", "D2")
 REFRESH_MS = 30_000
+
+
+def resource_path(*parts: str) -> str:
+    """Return a path to a bundled resource (works in source and PyInstaller builds)."""
+    if getattr(sys, "frozen", False):
+        base_dir = getattr(sys, "_MEIPASS", os.path.dirname(sys.executable))
+    else:
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+    return os.path.join(base_dir, *parts)
+
+
+def load_app_icon() -> QIcon:
+    """Prefer the platform-native icon when it exists, fall back to PNG."""
+    ico_path = resource_path("philadelphia-septa-metro-logo.ico")
+    png_path = resource_path("philadelphia-septa-metro-logo.png")
+    if sys.platform == "win32" and os.path.exists(ico_path):
+        return QIcon(ico_path)
+    if os.path.exists(png_path):
+        return QIcon(png_path)
+    if os.path.exists(ico_path):
+        return QIcon(ico_path)
+    return QIcon()
 
 
 class ApiWorker(QThread):
@@ -76,7 +100,14 @@ class MainWindow(QMainWindow):
         self._worker: ApiWorker | None = None
 
         self.setWindowTitle("SEPTAwatch")
-        self.setGeometry(80, 80, 1200, 720)
+        self.setMinimumSize(360, 280)
+        self.resize(1200, 720)
+
+        icon = load_app_icon()
+        if not icon.isNull():
+            self.setWindowIcon(icon)
+
+        self._build_menu()
 
         self.tabs = QTabWidget()
         self.setCentralWidget(self.tabs)
@@ -101,6 +132,31 @@ class MainWindow(QMainWindow):
 
         self.tabs.currentChanged.connect(self.refresh_current_tab)
         self.refresh_current_tab()
+
+    def _build_menu(self) -> None:
+        file_menu = self.menuBar().addMenu("&File")
+        refresh_action = QAction("&Refresh", self)
+        refresh_action.setShortcut("F5")
+        refresh_action.triggered.connect(self.refresh_current_tab)
+        file_menu.addAction(refresh_action)
+
+        quit_action = QAction("E&xit", self)
+        quit_action.setShortcut("Ctrl+Q")
+        quit_action.triggered.connect(self.close)
+        file_menu.addAction(quit_action)
+
+        help_menu = self.menuBar().addMenu("&Help")
+        about_action = QAction("&About", self)
+        about_action.triggered.connect(self._show_about)
+        help_menu.addAction(about_action)
+
+    def _show_about(self) -> None:
+        QMessageBox.about(
+            self,
+            "About SEPTAwatch",
+            "SEPTAwatch is a desktop companion for SEPTA transit information.\n\n"
+            "Live data comes from the public JSON APIs at www3.septa.org/api.",
+        )
 
     def _busy(self) -> bool:
         return self._worker is not None and self._worker.isRunning()
@@ -485,12 +541,20 @@ class MainWindow(QMainWindow):
         self._run(self.client.get_elevator_outages, show)
 
 
-def main() -> None:
+def main() -> int:
     app = QApplication(sys.argv)
+    app.setApplicationName("SEPTAwatch")
+    app.setOrganizationName("SEPTAwatch")
+    app.setStyle("Fusion")
+
+    icon = load_app_icon()
+    if not icon.isNull():
+        app.setWindowIcon(icon)
+
     window = MainWindow()
     window.show()
-    sys.exit(app.exec())
+    return app.exec()
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())
