@@ -1,22 +1,14 @@
 # PowerShell build script for creating Windows executable
+$ErrorActionPreference = "Stop"
+Set-Location -Path $PSScriptRoot
+
 Write-Host "Building SEPTAwatch executable..." -ForegroundColor Green
 
-# Install PyInstaller if not already installed
 pip install pyinstaller
+if ($LASTEXITCODE -ne 0) { throw "Failed to install PyInstaller" }
 
-# Build the executable
-pyinstaller --name=SEPTAwatch `
-    --onefile `
-    --windowed `
-    --icon="$PSScriptRoot\philadelphia-septa-metro-logo.ico" `
-    --add-data "requirements.txt;." `
-    --hidden-import PyQt6 `
-    --hidden-import PyQt6.QtCore `
-    --hidden-import PyQt6.QtGui `
-    --hidden-import PyQt6.QtWidgets `
-    --collect-submodules PyQt6 `
-    --collect-all PyQt6 `
-    main.py
+pyinstaller --noconfirm --clean SEPTAwatch.spec
+if ($LASTEXITCODE -ne 0) { throw "PyInstaller build failed" }
 
 Write-Host "`nBuild complete! Executable is in the 'dist' folder." -ForegroundColor Green
 Write-Host "You can find it at: dist\SEPTAwatch.exe" -ForegroundColor Cyan
